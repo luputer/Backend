@@ -1,11 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
+  
 }
 
 datasource db {
@@ -13,3 +8,1084 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model absen {
+  id_absen Int      @id @default(autoincrement())
+  nip      String   @db.VarChar(255)
+  tgl      DateTime @default(now()) @db.Timestamp(0)
+  status   Boolean
+
+  @@index([nip], map: "nip")
+  @@index([status], map: "status")
+  @@index([tgl], map: "tgl")
+}
+
+model siap_angka_huruf {
+  id_angka_huruf Int    @id @default(autoincrement())
+  id_thn_ak      String @db.Char(5)
+  nilai          Float  @db.Float
+  huruf          String @db.Char(2)
+}
+
+model siap_beasiswa {
+  id_beasiswa   Int    @id @default(autoincrement()) @db.TinyInt
+  nama_beasiswa String @db.VarChar(20)
+  ket           String @db.Text
+}
+
+model siap_beasiswa_mhs {
+  id_beasiswa_mhs Int      @id @default(autoincrement())
+  nim             String   @db.Char(16)
+  id_beasiswa     Int      @db.TinyInt
+  id_thn_ak       String   @db.Char(5)
+  id_pegawai      Int      @db.SmallInt
+  waktu_update    DateTime @db.DateTime(0)
+  ket             String   @db.Text
+}
+
+model siap_bebas_masalah_kartu {
+  id_bebas_masalah_kartu    Int      @id @default(autoincrement())
+  id_thn_ak                 String   @default("0") @db.Char(5)
+  nim                       String   @default("0") @db.Char(18)
+  id_bebas_masalah_prodi    Boolean  @default(false)
+  petugas_prodi             Int      @default(0)
+  tgl_prodi                 DateTime @default(dbgenerated("('0000-00-00')")) @db.Date
+  ket_prodi                 String   @db.Text
+  id_bebas_masalah_keuangan Boolean  @default(false)
+  petugas_keuangan          Int      @default(0)
+  tgl_keuangan              DateTime @db.Date
+  ket_keuangan              String   @db.Text
+}
+
+model siap_bulan_ak {
+  id_bln_ak Int     @id @default(autoincrement())
+  id_thn_ak String  @db.Char(5)
+  no_bln    String  @db.Char(2)
+  m_ke      Boolean
+  no_mg     Boolean
+}
+
+model siap_calon_mhs {
+  nilai_masuk                Decimal?  @db.Decimal(4, 2)
+  id_thn_ak_masuk            String    @db.Char(5)
+  nama_calon_mhs             String?   @db.VarChar(50)
+  nik                        String    @db.Char(16)
+  password                   String    @db.VarChar(100)
+  nisn                       String    @db.Char(10)
+  npwp                       String?   @db.VarChar(255)
+  id_status_awal             String?   @db.Char(1)
+  id_prodi_lulus             Int?      @db.TinyInt
+  id_pegawai                 Int?      @db.SmallInt
+  jk                         String?   @db.Char(1)
+  golongan_darah             String?   @db.Char(2)
+  warga_negara               String?   @db.Char(3)
+  kebangsaan                 String?   @db.VarChar(50)
+  tempat_lahir               String?   @db.VarChar(50)
+  tgl_lahir                  DateTime? @db.Date
+  id_agama                   Int?      @db.TinyInt
+  id_status_sipil            String?   @db.Char(1)
+  alamat                     String?   @db.VarChar(255)
+  latitude                   String?   @db.VarChar(25)
+  longitude                  String?   @db.VarChar(25)
+  rt                         String?   @db.Char(5)
+  rw                         String?   @db.Char(5)
+  kode_pos                   String?   @db.VarChar(6)
+  id_kelurahan               String?   @db.Char(10)
+  telepon                    String?   @db.VarChar(50)
+  handphone                  String?   @db.VarChar(50)
+  email                      String?   @db.VarChar(100)
+  alamat_asal                String?   @db.VarChar(255)
+  id_kelurahan_asal          String?   @db.Char(10)
+  kode_pos_asal              String?   @db.Char(6)
+  negara_asal                String?   @db.VarChar(50)
+  nama_ayah                  String?   @db.VarChar(50)
+  nik_ayah                   String?   @db.VarChar(255)
+  id_agama_ayah              Int?      @db.TinyInt
+  id_pendidikan_ayah         String?   @db.Char(2)
+  id_pekerjaan_ayah          String?   @db.Char(1)
+  id_status_hidup_ayah       String?   @db.Char(1)
+  tgl_lahir_ayah             DateTime? @db.Date
+  nama_ibu                   String?   @db.VarChar(50)
+  nik_ibu                    String?   @db.VarChar(255)
+  id_agama_ibu               Int?      @db.TinyInt
+  id_pendidikan_ibu          String?   @db.Char(2)
+  id_pekerjaan_ibu           String?   @db.Char(1)
+  id_status_hidup_ibu        String?   @db.Char(1)
+  range_penghasilan_ayah     String?   @db.Char(3)
+  penghasilan_ayah           Int?
+  range_penghasilan_ibu      String?   @db.Char(3)
+  penghasilan_ibu            Int?
+  alamat_ortu                String?   @db.VarChar(255)
+  kode_pos_ortu              String?   @db.VarChar(6)
+  id_kelurahan_ortu          String?   @db.Char(10)
+  negara_ortu                String?   @db.VarChar(50)
+  telpon_ortu                String?   @db.VarChar(50)
+  handphone_ortu             String?   @db.VarChar(50)
+  email_ortu                 String?   @db.VarChar(100)
+  sekolah_asal               String?   @db.VarChar(100)
+  id_jenis_sekolah           Int?      @db.TinyInt
+  id_sekolah                 Int?
+  kota_sekolah               String?   @db.VarChar(50)
+  id_jurusan_sekolah         Int?      @db.TinyInt
+  nilai_sekolah              Float?    @db.Float
+  file_foto                  String?   @db.VarChar(25)
+  file_kk                    String?   @db.VarChar(25)
+  file_akta_kelahiran        String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  ket                        String?   @db.VarChar(255)
+  jml_tanggungan_sekolah_sd  Int       @default(0) @db.SmallInt
+  jml_tanggungan_sekolah_smp Int       @default(0) @db.SmallInt
+  jml_tanggungan_sekolah_sma Int       @default(0) @db.SmallInt
+  jml_tanggungan_kuliah      Int       @default(0) @db.SmallInt
+  jml_anggota_keluarga       Int       @default(0) @db.SmallInt
+  tagihan_pdam               Float     @default(0)
+  tagihan_pln                Float     @default(0)
+  status_rumah               String    @default("0") @db.VarChar(15)
+  daya_pln                   String    @default("0") @db.VarChar(10)
+  kip_kuliah                 String?   @db.Char(1)
+  file_billing_pln           String?   @db.VarChar(25)
+  file_billing_pdam          String?   @db.VarChar(25)
+  file_slip_gaji             String?   @db.VarChar(25)
+  file_ket_sehat             String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  file_warna                 String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  file_pernyataan            String?   @db.VarChar(25)
+  file_pernaytaan_kip        String?   @db.VarChar(25)
+  almamater                  String?   @db.VarChar(5)
+  status_entry_data          String    @default("B") @db.Char(1)
+  ukuran_baju                String?   @db.VarChar(15)
+  nilai                      Int       @default(0)
+  foto                       String?   @db.VarChar(20)
+  id_transportasi            Boolean?
+  id_jenis_tinggal           Boolean?
+  id_kec                     String?   @db.Char(10)
+  kelurahan                  String?   @db.VarChar(100)
+  id_kec_ortu                String?   @db.Char(10)
+  kelurahan_ortu             String?   @db.VarChar(100)
+  tgl_lahir_ibu              DateTime? @db.Date
+  file_ijazah                String?   @db.VarChar(50)
+  file_ktp                   String?   @db.VarChar(50)
+  file_kip                   String?   @db.VarChar(50)
+  no_kip                     String?   @db.VarChar(50)
+  file_komitment             String?   @db.VarChar(35)
+  id_wil                     String    @db.Char(8)
+  id_verifikasi              Boolean   @default(false)
+  ket_pemeriksa              String    @db.Text
+
+  @@id([id_thn_ak_masuk, nisn])
+  @@index([nik], map: "nik")
+}
+
+model siap_dosen {
+  id_dosen    Int      @id @default(autoincrement())
+  id_kelas_mk Int?
+  id_pegawai  Int?     @default(0) @db.SmallInt
+  no          Boolean? @default(false)
+  ket         String?  @db.Text
+  pembagi     Int?     @default(16) @db.TinyInt
+
+  @@index([id_kelas_mk], map: "id_kelas_mk")
+  @@index([id_pegawai], map: "id_pegawai")
+}
+
+model siap_hari {
+  id_hari Boolean @id
+  hari    String  @db.Char(10)
+}
+
+model siap_item_exit_survey {
+  kode    String  @db.VarChar(10)
+  item    String  @db.Char(2)
+  pilihan String? @db.VarChar(60)
+
+  @@id([kode, item])
+}
+
+model siap_jadwal_kuliah {
+  id_jadwal_kuliah Int     @id @default(autoincrement())
+  id_kelas_mk      Int?
+  hari             String? @db.VarChar(150)
+  id_jam_mulai     Int?    @db.TinyInt
+  id_jam_selesai   Int?    @db.TinyInt
+  id_ruang         Int?
+
+  @@index([hari], map: "id_hari")
+  @@index([id_kelas_mk], map: "id_kelas_mk")
+}
+
+model siap_jadwal_uas {
+  id_jadwal_uas Int      @id @default(autoincrement())
+  id_kelas_mk   Int
+  id_pengawas   Int      @db.SmallInt
+  jam_mulai     DateTime @db.Time(0)
+  jam_selesai   DateTime @db.Time(0)
+  tgl           DateTime @db.Date
+  ruangan       String   @db.VarChar(120)
+  ket           String   @db.Text
+  sifat_ujian   String   @db.Text
+
+  @@index([id_kelas_mk], map: "id_kelas_mk")
+  @@index([id_pengawas], map: "id_pengawas")
+}
+
+model siap_jam {
+  id_jam   Int      @id @default(autoincrement()) @db.TinyInt
+  nama_jam DateTime @db.Time(0)
+}
+
+model siap_kalender_ak {
+  id_kalender_ak     Int      @id @default(autoincrement())
+  id_thn_ak          String   @db.Char(5)
+  no                 Int      @db.TinyInt
+  tgl_m              DateTime @db.Date
+  tgl_a              DateTime @db.Date
+  kegiatan           String   @db.VarChar(255)
+  ket                String   @db.VarChar(255)
+  id_status_kalender Int
+}
+
+model siap_kategori_spp {
+  id_kategori_spp Int                     @id @default(autoincrement()) @db.TinyInt
+  jumlah          Int
+  ket             String                  @db.VarChar(255)
+  aktif           siap_kategori_spp_aktif @default(T)
+}
+
+model siap_kelas {
+  id_kelas         Int     @id @default(autoincrement())
+  id_thn_ak        String  @db.Char(5)
+  id_prodi         Int     @db.TinyInt
+  smt              Int     @db.TinyInt
+  nama_kelas       String  @db.VarChar(50)
+  alias            String? @db.VarChar(5)
+  id_program_kelas String? @db.Char(2)
+  ket              String  @default("") @db.VarChar(254)
+  kelas_merdeka    String  @default("T") @db.Char(1)
+
+  @@index([id_prodi], map: "id_prodi")
+  @@index([id_thn_ak], map: "id_thn_ak")
+}
+
+model siap_kelas_master {
+  id_kelas_master BigInt  @id @default(autoincrement())
+  no_absen        Int     @db.TinyInt
+  id_kelas        Int
+  nim             String  @db.Char(15)
+  ket             String? @db.Text
+  id_thn_ak       String? @db.VarChar(5)
+  smt             String? @db.VarChar(5)
+  id_status_mhs   String  @db.Char(1)
+  status_krs      Boolean
+  status_uas      Boolean @default(false)
+
+  @@index([id_kelas], map: "id_kelas")
+  @@index([id_status_mhs], map: "id_status_mhs")
+  @@index([id_thn_ak], map: "id_thn_ak")
+  @@index([nim], map: "nim")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model siap_kelas_mk {
+  id_kelas_mk  Int     @id @default(autoincrement())
+  id_kelas     Int?
+  id_mk        Int?    @db.SmallInt
+  id_kurikulum Int?    @default(0)
+  id_pegawai   Int?    @default(0) @db.UnsignedSmallInt
+  id_hari      Int?    @default(0) @db.UnsignedTinyInt
+  jam_mulai    Int?    @default(0) @db.TinyInt
+  jam_akhir    Int?    @default(0) @db.TinyInt
+  id_ruang     Int?    @default(0)
+  pembagi      Int?    @default(16) @db.TinyInt
+  ket          String? @default("") @db.VarChar(254)
+  file_rps     String? @db.VarChar(50)
+  bobot_ap     Float?  @default(0)
+  bobot_hp     Float?  @default(0)
+  bobot_qiz    Float?  @default(0)
+  bobot_tgs    Float?  @default(0)
+  bobot_uts    Float?  @default(0)
+  bobot_uas    Float?  @default(0)
+  link_uas     String? @db.Text
+
+  @@index([id_kelas], map: "id_kelas")
+  @@index([id_kurikulum], map: "id_kurikulum")
+}
+
+model siap_kurikulum {
+  id_kurikulum Int     @id @default(autoincrement())
+  id_mk        Int     @db.SmallInt
+  id_thn_ak    String  @db.Char(5)
+  ket          String? @db.VarChar(255)
+
+  @@index([id_mk], map: "id_mk")
+  @@index([id_thn_ak], map: "id_thn_ak")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model siap_mhs {
+  nim                        String    @id @db.Char(16)
+  id_kategori_spp            Int       @default(0) @db.SmallInt
+  kelas                      String    @default("0") @db.Char(3)
+  nilai_masuk                Decimal   @default(0.00) @db.Decimal(4, 2)
+  thn_ak_masuk               String?   @db.Char(5)
+  thn_ak_lulus               String?   @db.Char(5)
+  nama_mhs                   String    @db.Char(145)
+  nik_mhs                    String    @default("0") @db.VarChar(255)
+  nisn                       String    @db.VarChar(255)
+  npwp                       String    @default("0") @db.VarChar(255)
+  id_status_awal             String?   @db.Char(1)
+  id_status_aktif_mhs        Int       @default(0)
+  id_status_mhs              String    @default("") @db.Char(1)
+  id_prodi                   Int       @db.TinyInt
+  id_pegawai                 Int?      @default(0) @db.SmallInt
+  operator                   Int?      @db.SmallInt
+  jk                         String?   @db.Char(1)
+  golongan_darah             String    @default("0") @db.Char(2)
+  warga_negara               String?   @db.Char(3)
+  kebangsaan                 String?   @db.VarChar(50)
+  tempat_lahir               String?   @db.VarChar(50)
+  tgl_lahir                  DateTime? @db.Date
+  id_agama                   Int?      @db.TinyInt
+  id_status_sipil            String?   @db.Char(1)
+  alamat                     String?   @db.VarChar(255)
+  kota                       String    @default("0") @db.VarChar(100)
+  kode_pos                   String?   @db.VarChar(6)
+  id_wil                     String    @db.Char(8)
+  nama_kelurahan             String    @db.VarChar(255)
+  id_kabupaten               String    @default("0") @db.Char(10)
+  id_prov                    String    @default("0") @db.Char(2)
+  id_kab                     String    @default("0") @db.Char(4)
+  id_kec                     String    @default("0") @db.Char(6)
+  id_kel                     String?   @default("0") @db.Char(10)
+  telepon                    String?   @db.VarChar(50)
+  handphone                  String?   @db.VarChar(50)
+  email                      String?   @db.VarChar(100)
+  alamat_asal                String?   @db.VarChar(255)
+  kota_asal                  String    @default("0") @db.VarChar(100)
+  id_kabupaten_asal          String    @default("0") @db.Char(10)
+  id_prov_asal               String    @default("0") @db.Char(2)
+  id_kab_asal                String    @default("0") @db.Char(4)
+  id_kec_asal                String    @default("0") @db.Char(6)
+  id_kel_asal                String?   @default("0") @db.Char(10)
+  kode_pos_asal              String?   @db.Char(6)
+  negara_asal                String?   @db.VarChar(50)
+  nama_ayah                  String?   @db.VarChar(50)
+  nik_ayah                   String    @default("0") @db.VarChar(255)
+  id_agama_ayah              Int?      @db.TinyInt
+  id_pendidikan_ayah         String?   @db.Char(2)
+  id_pekerjaan_ayah          String?   @db.Char(1)
+  id_status_hidup_ayah       String?   @db.Char(1)
+  nama_ibu                   String?   @db.VarChar(50)
+  nik_ibu                    String    @default("0") @db.VarChar(255)
+  id_agama_ibu               Int?      @db.TinyInt
+  id_pendidikan_ibu          String?   @db.Char(2)
+  id_pekerjaan_ibu           String?   @db.Char(1)
+  id_status_hidup_ibu        String?   @db.Char(1)
+  penghasilan_ortu           Int       @default(0)
+  penghasilan_ayah           Int       @default(0)
+  penghasilan_ibu            Int       @default(0)
+  alamat_ortu                String?   @db.VarChar(255)
+  kota_ortu                  String?   @db.VarChar(100)
+  kode_pos_ortu              String?   @db.VarChar(6)
+  id_kabupaten_ortu          String    @default("0") @db.Char(10)
+  id_prov_ortu               String    @default("0") @db.Char(2)
+  id_kab_ortu                String    @default("0") @db.Char(4)
+  id_kec_ortu                String    @default("0") @db.Char(6)
+  id_kel_ortu                String?   @default("0") @db.Char(10)
+  negara_ortu                String?   @db.VarChar(50)
+  telpon_ortu                String?   @db.VarChar(50)
+  handphone_ortu             String?   @db.VarChar(50)
+  email_ortu                 String?   @db.VarChar(100)
+  sekolah_asal               String?   @db.VarChar(100)
+  id_jenis_sekolah           Int?      @db.TinyInt
+  kota_sekolah               String?   @db.VarChar(50)
+  id_jurusan_sekolah         Int?
+  nilai_sekolah              Float?    @db.Float
+  tgl_lulus                  DateTime? @db.Date
+  IPK                        Decimal   @default(0.00) @db.Decimal(4, 2)
+  status_bintalfisdis        Int       @default(0)
+  foto                       String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  id_verifikasi              Int       @default(0) @db.SmallInt
+  ket_ktm                    String?   @db.Text
+  foto_ktp                   String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  foto_ijasah                String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  foto_transkip              String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  foto_status                String    @default("B") @db.Char(1)
+  foto_kk                    String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  kk_status                  String    @default("B") @db.Char(1)
+  foto_ak                    String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  akta_status                String    @default("B") @db.Char(1)
+  ket                        String    @default("0") @db.VarChar(255)
+  jml_tanggungan_sekolah_sd  Int       @default(0) @db.SmallInt
+  jml_tanggungan_sekolah_smp Int       @default(0) @db.SmallInt
+  jml_tanggungan_sekolah_sma Int       @default(0) @db.SmallInt
+  jml_tanggungan_kuliah      Int       @default(0) @db.SmallInt
+  tagihan_pdam               Int       @default(0)
+  tagihan_pln                Int       @default(0)
+  status_rumah               String    @default("0") @db.VarChar(15)
+  daya_pln                   String    @default("0") @db.VarChar(10)
+  foto_pln                   String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  foto_pdam                  String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  foto_gaji                  String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  pln_status                 String    @default("B") @db.Char(1)
+  pdam_status                String    @default("B") @db.Char(1)
+  gaji_status                String    @default("B") @db.Char(1)
+  pernyataan_status          Int       @default(0) @db.SmallInt
+  foto_sehat                 String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  foto_warna                 String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  srt_pernyataan             String    @default("blm_ada_foto.jpg") @db.VarChar(25)
+  almamater                  String    @default("0") @db.VarChar(5)
+  status_entry_data          String    @default("B") @db.Char(1)
+  finalisasi_data            String    @default("0") @db.Char(1)
+  validasi_prodi             String    @default("0") @db.Char(1)
+  bidikmisi                  String?   @default("0") @db.VarChar(5)
+  id_pembayaran              String    @default("0") @db.VarChar(15)
+  ukuran_baju                String    @default("0") @db.VarChar(15)
+  nilai                      Int       @default(0)
+  tgl_jam                    DateTime? @db.DateTime(0)
+  mobile                     String?   @db.Char(1)
+  id_jenis_tinggal           Int?      @default(0) @db.SmallInt
+  id_transportasi            Int?      @default(0) @db.SmallInt
+  nama_ktp                   String?   @db.Text
+  no_wa                      String?   @db.VarChar(50)
+  no_kuota                   String?   @db.VarChar(50)
+  last_access_kuota          DateTime? @db.Date
+  jml_ukt_cicil              Int?
+  provider                   String?   @db.VarChar(50)
+  raport                     String?   @db.VarChar(50)
+  raport2                    String?   @db.VarChar(50)
+  raport3                    String?   @db.VarChar(50)
+  raport4                    String?   @db.VarChar(50)
+  raport5                    String?   @db.VarChar(50)
+  raport6                    String?   @db.VarChar(50)
+  status_lulus               Int?      @db.SmallInt
+  rt_asal                    String?   @db.Char(4)
+  rw_asal                    String?   @db.Char(4)
+  foto_ti_pernyataan         String?   @db.VarChar(25)
+  foto_ti_komitmen           String?   @db.VarChar(25)
+  foto_gaji_ibu              String?   @db.VarChar(25)
+  foto_akta                  String?   @db.VarChar(25)
+  foto_ukt                   String?   @db.VarChar(25)
+  status_pernyataan          String?   @db.Char(1)
+  status_kip                 Int?      @db.SmallInt
+  id_penghasilan_ayah        Int?      @db.SmallInt
+  id_penghasilan_ibu         Int?      @db.SmallInt
+  id_rumah_sakit             Int?      @db.SmallInt
+  id_penyakit                Int?      @db.SmallInt
+  no_kip                     String?   @db.VarChar(25)
+  no_ujian                   String?   @db.VarChar(25)
+  foto_cicil                 String?   @db.VarChar(25)
+  foto_ukt_bintalfisdis      String?   @db.VarChar(25)
+  foto_skhu                  String?   @db.VarChar(25)
+  foto_sktl                  String?   @db.VarChar(25)
+  kartu_peserta              String?   @db.VarChar(25)
+  formulir_kip               String?   @db.VarChar(25)
+  kip_kks                    String?   @db.VarChar(25)
+  rekom_dinsos               String?   @db.VarChar(25)
+  sktm                       String?   @db.VarChar(25)
+  penghasilan_kelurahan      String?   @db.VarChar(25)
+  id_registrasi_cicil        String?   @db.VarChar(25)
+  mobile_cicil               String?   @db.VarChar(25)
+  tgl_lahir_ayah             DateTime? @db.Date
+  tgl_lahir_ibu              DateTime? @db.Date
+  prodi1                     Int?      @db.TinyInt
+  prodi2                     Int?      @db.TinyInt
+  foto_bintalfisdis          String?   @db.VarChar(25)
+  ukt                        String?   @db.Char(1)
+  hp                         String?   @db.VarChar(25)
+  c_19                       String?   @db.Char(1)
+  tempat_vaksin              String?   @db.VarChar(255)
+  vaksin                     String?   @db.Char(1)
+  tgl_vaksin                 DateTime? @db.Date
+  tgl_terpapar_c19           DateTime? @db.Date
+  vaksin2                    String?   @db.Char(1)
+  tgl_vaksin2                DateTime? @db.Date
+  tempat_vaksin2             String?   @db.VarChar(255)
+  nama_vaksin                String?   @db.VarChar(255)
+  status_entry               String?   @db.Char(1)
+  status_profile             String    @default("0") @db.Char(1)
+  ket_pemeriksa              String?   @db.Text
+  id_pemeriksa               Int       @default(0) @db.SmallInt
+  email_lupa                 String    @default("arifbjm.mmm@gmail.com") @db.VarChar(100)
+  id_susulan_verifikasi      Int       @default(0) @db.SmallInt
+  link_video                 String?   @db.Text
+  ket_video                  String?   @db.Text
+  status_video               String    @default("0") @db.Char(1)
+  link_ppdkti                String?   @db.Text
+  verifikasi_foto_yudisium   String    @default("0") @db.Char(1)
+  file_ijazah                String?   @db.VarChar(50)
+  file_transkrip             String?   @db.VarChar(50)
+  rfid                       String?   @db.Char(10)
+  edit                       String?   @default("0") @db.Char(1)
+
+  @@index([id_kategori_spp], map: "id_kategori_spp")
+  @@index([id_prodi], map: "id_prodi")
+  @@index([id_status_aktif_mhs], map: "id_status_aktif_mhs")
+  @@index([id_wil], map: "id_wil")
+  @@index([thn_ak_masuk], map: "thn_ak_masuk")
+}
+
+model siap_mk {
+  id_mk                Int             @id @default(autoincrement()) @db.SmallInt
+  kode_mk              String          @db.VarChar(15)
+  tp                   String          @default("T") @db.Char(2)
+  nama_mk              String          @db.VarChar(100)
+  nama_alias           String?         @db.VarChar(100)
+  id_prodi             Int             @db.TinyInt
+  smt                  Int             @db.TinyInt
+  sks                  Float           @db.Float
+  jam                  Int             @db.TinyInt
+  id_kelompok_mk       String?         @db.Char(2)
+  id_thn_ak_aktif      String?         @db.Char(5)
+  id_thn_ak_pasif      String?         @db.Char(5)
+  ket                  String?         @db.VarChar(200)
+  id_mk_wajib          Boolean?
+  id_mk_lama           Int             @db.SmallInt
+  sks_tatap_muka       Float?          @db.Float
+  sks_praktikum        Float?          @db.Float
+  sks_praktik_lapangan Float?          @db.Float
+  sks_simulasi         Float           @db.Float
+  ket_rps              siap_mk_ket_rps
+  id_jenis_mk          String?         @db.Char(1)
+  status_rps           String          @default("0") @db.Char(1)
+  id_jenis_evaluasi    Int             @default(0) @db.TinyInt
+
+  @@index([id_prodi], map: "id_prodi")
+  @@index([kode_mk], map: "kode_mk")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model siap_mk_kelompok {
+  id_kelompok_mk String                 @db.Char(2)
+  nama_kelompok  String                 @db.VarChar(30)
+  aktif          siap_mk_kelompok_aktif @default(Y)
+
+  @@ignore
+}
+
+model siap_nilai {
+  id_nilai        BigInt    @id @default(autoincrement())
+  id_kelas_mk     Int
+  id_kelas_master BigInt
+  p1              String?   @db.Char(1)
+  p2              String?   @db.Char(1)
+  p3              String?   @db.Char(1)
+  p4              String?   @db.Char(1)
+  p5              String?   @db.Char(1)
+  p6              String?   @db.Char(1)
+  p7              String?   @db.Char(1)
+  p8              String?   @db.Char(1)
+  p9              String?   @db.Char(1)
+  p10             String?   @db.Char(1)
+  p11             String?   @db.Char(1)
+  p12             String?   @db.Char(1)
+  p13             String?   @db.Char(1)
+  p14             String?   @db.Char(1)
+  p15             String?   @db.Char(1)
+  p16             String?   @db.Char(1)
+  kehadiran       Float?    @db.Float
+  prilaku         Int?      @db.TinyInt
+  tugas           Float?    @db.Float
+  praktek         Float?    @db.Float
+  uts             Float?    @db.Float
+  uas             Float?    @db.Float
+  angka           Float?    @db.Float
+  abs             String?   @db.Char(2)
+  n_huruf         String?   @db.Char(2)
+  ket             String?   @db.VarChar(255)
+  last_user       Int?
+  last_date       DateTime? @db.DateTime(0)
+  transkrip       String?   @default("Y") @db.Char(1)
+  last_update     DateTime  @default(now()) @db.Timestamp(0)
+
+  @@index([id_kelas_master], map: "id_kelas_master")
+  @@index([id_kelas_mk], map: "id_kelas_mk")
+}
+
+model siap_pkl {
+  id_pkl      Int       @id @default(autoincrement())
+  nim         String    @db.Char(11)
+  id_thn_ak   String    @db.Char(5)
+  judul       String    @db.Text
+  tempat_pkl  String    @db.VarChar(255)
+  pembimbing1 Int       @db.SmallInt
+  pembimbing2 Int       @db.SmallInt
+  penguji1    Int       @db.SmallInt
+  penguji2    Int       @db.SmallInt
+  tgl_sk      DateTime? @db.Date
+  no_sk       String    @db.VarChar(255)
+  status      String    @default("0") @db.Char(1)
+  status_pkl  String    @default("0") @db.Char(1)
+
+  @@index([id_thn_ak], map: "id_thn_ak")
+  @@index([nim], map: "nim")
+  @@index([pembimbing1], map: "pembimbing1")
+  @@index([pembimbing2], map: "pembimbing2")
+  @@index([penguji1], map: "penguji1")
+  @@index([penguji2], map: "penguji2")
+}
+
+model siap_presensi_dosen {
+  id_presensi_dosen        Int                 @id @default(autoincrement())
+  pertemuan_ke             Int                 @default(0) @db.TinyInt
+  id_kelas_mk              Int
+  tgl_presensi             DateTime            @db.Date
+  waktu_presensi           DateTime            @db.Time(0)
+  id_status_presensi_dosen String?             @db.Char(1)
+  jam                      Int                 @db.SmallInt
+  pokok                    String              @db.VarChar(255)
+  sub_pokok                String              @db.VarChar(255)
+  id_pegawai               Int
+  waktu_input              DateTime            @default(now()) @db.Timestamp(0)
+  siap_presensi_mhs        siap_presensi_mhs[]
+
+  @@index([id_kelas_mk], map: "id_kelas_mk")
+  @@index([id_pegawai], map: "id_pegawai")
+  @@index([id_status_presensi_dosen], map: "id_status_presensi_dosen")
+  @@index([pertemuan_ke], map: "pertemuan_ke")
+}
+
+model siap_presensi_mhs {
+  id_presensi_dosen      Int
+  id_kelas_master        Int
+  waktu_presensi         DateTime            @db.Time(0)
+  id_status_presensi_mhs String              @default("") @db.Char(1)
+  ket                    String?             @db.Char(1)
+  siap_presensi_dosen    siap_presensi_dosen @relation(fields: [id_presensi_dosen], references: [id_presensi_dosen], onDelete: Cascade, map: "FK_siap_presensi_mhs_siap_presensi_dosen")
+
+  @@id([id_presensi_dosen, id_kelas_master])
+  @@index([id_kelas_master], map: "id_kelas_master")
+  @@index([id_status_presensi_mhs], map: "id_status_presensi_mhs")
+}
+
+model siap_program_kelas {
+  id_program_kelas   String                   @id @db.Char(2)
+  nama_program_kelas String                   @db.VarChar(255)
+  aktif              siap_program_kelas_aktif @default(N)
+}
+
+model siap_registrasi_cicil_pmb {
+  id_registrasi_cicil_pmb Int      @id @default(autoincrement())
+  nim                     String   @db.Char(12)
+  no_pendaftaran          String   @db.Char(15)
+  jml_bayar               Int
+  jml_sisa                Int
+  tgl_bayar               DateTime @db.Date
+  id_status_spp           String   @db.Char(1)
+
+  @@index([nim], map: "nim")
+  @@index([no_pendaftaran], map: "no_pendaftaran")
+}
+
+model siap_registrasi_mhs {
+  id_registrasi_mhs        Int       @id @default(autoincrement())
+  id_thn_ak                String    @db.Char(5)
+  no_pendaftaran           String?   @db.Char(15)
+  nim                      String?   @db.Char(16)
+  smt                      Int       @db.TinyInt
+  id_status_spp            String    @db.Char(1)
+  tgl_registrasi           DateTime? @db.DateTime(0)
+  id_kategori_spp          Int       @db.TinyInt
+  jumlah                   Int
+  sisa                     Int
+  id_petugas_spp           Int       @db.SmallInt
+  ket_spp                  String    @db.VarChar(255)
+  id_petugas_keuangan      Int       @db.TinyInt
+  catatan_keuangan         String?   @db.VarChar(255)
+  tgl_keuangan             DateTime? @db.DateTime(0)
+  id_bebas_masalah         String    @default("0") @db.Char(1)
+  tgl_bebas_masalah        DateTime? @db.DateTime(0)
+  id_petugas_bebas_masalah Int       @db.SmallInt
+  ket_bebas_masalah        String?   @db.VarChar(255)
+  status                   String    @db.Char(1)
+  status_uas               String    @default("0") @db.Char(1)
+
+  @@unique([id_thn_ak, no_pendaftaran, nim], map: "id_thn_ak_2")
+  @@index([id_kategori_spp], map: "id_kategori_spp")
+  @@index([id_status_spp], map: "id_status_spp")
+  @@index([id_thn_ak], map: "id_thn_ak")
+  @@index([nim], map: "nim")
+  @@index([no_pendaftaran], map: "no_pendaftaran")
+}
+
+model siap_ruang {
+  id_ruang   Int    @id @default(autoincrement())
+  id_prodi   Int    @db.TinyInt
+  nama_ruang String @db.VarChar(100)
+}
+
+model siap_sk {
+  id_thn_ak  String    @db.Char(5)
+  id_jenis   String    @db.Char(2)
+  id_jurusan String    @db.Char(2)
+  no_sk      String?   @db.VarChar(50)
+  tgl_sk     DateTime? @db.Date
+  id_pejabat Int?
+
+  @@id([id_thn_ak, id_jenis, id_jurusan])
+}
+
+model siap_sk_jurusan {
+  id                 Int       @id @default(autoincrement()) @db.TinyInt
+  id_thn_ak          String    @db.Char(5)
+  id_jurusan         Int
+  id_jenis_aktifitas Int
+  no_sk              String?   @db.VarChar(50)
+  tanggal_sk         DateTime? @db.Date
+  id_pejabat         Int?
+  id_jenis_sk        Int?
+  no_sk_jurusan      String?   @db.VarChar(50)
+  tanggal_sk_jurusan DateTime? @db.Date
+  no_sk_kbk          String?   @db.VarChar(50)
+  tgl_sk_kbk         DateTime? @db.Date
+
+  @@index([id_jenis_aktifitas], map: "id_jenis_aktifitas")
+  @@index([id_jurusan], map: "id_jurusan")
+  @@index([id_thn_ak], map: "id_thn_ak")
+}
+
+model siap_status_aktif_mhs {
+  id_status_aktif_mhs BigInt    @id @default(autoincrement())
+  no_pendaftaran      String?   @db.Char(15)
+  nim                 String?   @db.Char(16)
+  id_status_mhs       String    @db.Char(1)
+  id_thn_ak           String    @db.Char(5)
+  waktu               DateTime? @default(now()) @db.Timestamp(0)
+  id_petugas          Int       @db.SmallInt
+  ket                 String    @db.VarChar(255)
+  alasan              String?   @db.Text
+  smt_kelas           String?   @db.VarChar(255)
+  jam                 String?   @db.VarChar(3)
+  tgl_surat           DateTime? @db.Date
+  status              String    @db.Char(1)
+  id_pegawai          Int       @db.SmallInt
+  usulan              String    @default("0") @db.Char(1)
+  id_terminal         Int       @db.TinyInt
+
+  @@index([id_status_mhs], map: "id_status_mhs")
+  @@index([id_thn_ak], map: "id_thn_ak")
+  @@index([nim], map: "nim")
+  @@index([no_pendaftaran], map: "no_pendaftaran")
+}
+
+model siap_status_awal {
+  id_status_awal       String @id @db.Char(1)
+  nama_status_awal     String @db.Char(10)
+  ket                  String @db.VarChar(255)
+  id_jalur_pendaftaran Int?   @db.TinyInt
+}
+
+model siap_status_bebas_masalah {
+  id_bebas_masalah String @id @db.Char(1)
+  ket              String @db.Char(15)
+}
+
+model siap_status_mhs {
+  id_status_mhs   String @id @default("") @db.Char(1)
+  nama_status_mhs String @default("") @db.VarChar(50)
+  link            String @db.VarChar(20)
+}
+
+model siap_status_spp {
+  id_status_spp String @id @db.Char(1)
+  ket           String @db.Char(10)
+}
+
+model siap_surat_online {
+  id            Int      @id @default(autoincrement())
+  nim           String   @db.Char(16)
+  id_surat      String   @db.Char(1)
+  alasan        String?  @db.Text
+  status        String   @db.Char(1)
+  tgl           DateTime @db.Date
+  file_lampiran String   @db.VarChar(25)
+  no_surat      String?  @db.VarChar(50)
+  ortu          String?  @db.VarChar(50)
+  nip           String?  @db.VarChar(25)
+  pangkat       String?  @db.VarChar(80)
+  instansi      String?  @db.VarChar(80)
+  no_hp         String?  @db.VarChar(13)
+  status_wa     String   @default("0") @db.Char(1)
+
+  @@index([nim], map: "nim")
+}
+
+model siap_thn_ak {
+  id_thn_ak          String            @id @db.Char(5)
+  nama_thn_ak        String            @db.VarChar(50)
+  catatan            String?           @db.VarChar(255)
+  aktif              siap_thn_ak_aktif
+  tgl_awal_kuliah    DateTime?         @db.Date
+  tgl_akhir_kuliah   DateTime?         @db.Date
+  tgl_awal_kuesioner DateTime?         @db.Date
+}
+
+model simpeg_bagian {
+  id_bagian   Int    @id @db.TinyInt
+  nama_bagian String @db.VarChar(20)
+}
+
+model simpeg_fungsional_pegawai {
+  id_fungsional_pegawai Int      @id @default(autoincrement())
+  id_pegawai            Int      @db.SmallInt
+  id_jabatan_fungsional Int      @db.SmallInt
+  tmt_jabatan           DateTime @db.Date
+  jml_angka_kridit      Float    @db.Float
+  pejabat_penetap       String   @db.VarChar(50)
+  no_sk                 String   @db.VarChar(30)
+  tgl_sk                DateTime @db.Date
+  gambar1_fungsional    String   @db.VarChar(100)
+  gambar2_fungsional    String   @db.VarChar(100)
+}
+
+model simpeg_jabatan_fungsional {
+  id_jabatan_fungsional   Int    @id @default(autoincrement())
+  nama_jabatan_fungsional String @db.VarChar(30)
+}
+
+model simpeg_jabatan_fungsional_kependidikan {
+  id_jabatan_fungsional   Int    @id @default(autoincrement())
+  nama_jabatan_fungsional String @db.VarChar(30)
+  tingkat                 String @db.VarChar(20)
+}
+
+model simpeg_jabatan_struktural {
+  id_jabatan_struktural   Int    @id @default(autoincrement()) @db.SmallInt
+  nama_jabatan_struktural String @default("") @db.VarChar(100)
+  id_jurusan              Int    @db.TinyInt
+}
+
+model simpeg_keluarga {
+  id_keluarga        Int      @id @default(autoincrement()) @db.SmallInt
+  nama_keluarga      String   @db.VarChar(50)
+  id_pegawai         Int      @db.SmallInt
+  id_status_keluarga Int      @db.TinyInt
+  jk                 String   @db.Char(2)
+  id_provinsi        String   @db.VarChar(6)
+  id_kabupaten       String   @db.VarChar(6)
+  alamat             String   @db.VarChar(100)
+  id_pekerjaan       String   @db.Char(1)
+  tgl_lahir          DateTime @db.Date
+  id_pendidikan      Int      @db.TinyInt
+  id_prov            String   @db.Char(2)
+  id_kab             String   @db.Char(4)
+  id_kec             String   @db.Char(6)
+  id_kel             String   @db.Char(10)
+  foto_akta          String   @db.VarChar(100)
+}
+
+model simpeg_level_pendidikan {
+  id_level_pendidikan   Int    @id @default(autoincrement()) @db.SmallInt
+  nama_level_pendidikan String @db.VarChar(50)
+}
+
+model simpeg_pangkat_gol_ruang {
+  id_pangkat_gol_ruang   Int    @id @default(autoincrement())
+  nama_pangkat_gol_ruang String @db.VarChar(50)
+}
+
+model simpeg_pegawai {
+  id_pegawai        Int       @id @default(autoincrement()) @db.SmallInt
+  nama_pegawai      String?   @db.VarChar(60)
+  panggilan         String    @db.VarChar(150)
+  jk                String    @db.Char(1)
+  id_agama          Int       @db.TinyInt
+  tempat_lahir      String?   @db.VarChar(40)
+  nama_ibu          String?   @db.VarChar(60)
+  tgl_lahir         DateTime? @db.Date
+  nidn              String    @db.Char(10)
+  nip_lama          String?   @db.VarChar(25)
+  nip_baru          String    @db.VarChar(50)
+  npwp              String?   @db.VarChar(20)
+  no_ktp            String    @db.VarChar(20)
+  no_kk             String    @db.VarChar(20)
+  no_serdos         String?   @db.VarChar(15)
+  no_karpeg         String    @db.VarChar(20)
+  no_askes          String?   @db.VarChar(15)
+  no_karis          String?   @db.VarChar(20)
+  gol_darah         String    @db.Char(2)
+  tmt_cpns          DateTime? @db.Date
+  tmt_pns           DateTime? @db.Date
+  id_pendidikan     String    @db.Char(1)
+  tmt_pensiun       DateTime? @db.Date
+  id_status_hidup   String?   @db.Char(1)
+  alamat            String    @db.VarChar(255)
+  kota              String?   @db.VarChar(100)
+  kode_pos          String    @db.VarChar(6)
+  id_kabupaten      String    @db.Char(10)
+  id_prov           String    @db.Char(2)
+  id_kab            String    @db.Char(4)
+  id_kec            String    @db.Char(6)
+  id_kel            String    @db.Char(10)
+  telpon            String    @db.VarChar(13)
+  handphone         String    @default("") @db.VarChar(20)
+  email             String    @db.VarChar(255)
+  email_poliban     String    @db.VarChar(100)
+  website           String    @db.VarChar(30)
+  id_status_pegawai String    @db.VarChar(5)
+  id_jurusan        Int       @db.TinyInt
+  id_bagian         Int       @db.TinyInt
+  id_prodi          Int       @db.SmallInt
+  id_prodi_mk       String    @db.VarChar(10)
+  foto1             String?   @default("blm_ada_foto.jpg") @db.VarChar(25)
+  foto              String    @db.VarChar(25)
+  foto_kartu        String    @db.VarChar(25)
+  foto_ktp          String    @db.VarChar(100)
+  foto_keluarga     String    @db.VarChar(100)
+  foto_npwp         String    @db.VarChar(100)
+  foto_karpeg       String    @db.VarChar(100)
+  foto_taspen       String    @db.VarChar(100)
+  foto_karis        String    @db.VarChar(100)
+  foto_surat_nikah  String    @db.VarChar(100)
+  foto_nip          String    @db.VarChar(100)
+  status_update     Boolean   @default(false)
+  status_10_th      Boolean   @default(true)
+  status_20_th      Boolean   @default(true)
+  status_30_th      Boolean   @default(true)
+  no_kuota          String    @db.VarChar(14)
+  provider          String    @db.VarChar(20)
+  last_access_kuota DateTime? @db.Date
+}
+
+model simpeg_pendanaan {
+  id_pendanaan Int    @id @default(autoincrement()) @db.SmallInt
+  pendanaan    String @db.VarChar(50)
+}
+
+model simpeg_r_jbtn_struktural {
+  id_r_jbtn_struktural  Int      @id @default(autoincrement())
+  id_pegawai            Int      @db.SmallInt
+  id_jabatan_struktural Int      @db.SmallInt
+  id_sub_unit           Int      @db.TinyInt
+  tmt_mulai             DateTime @db.Date
+  pejabat_penetap       String   @db.VarChar(50)
+  no_sk                 String   @db.VarChar(30)
+  tgl_sk                DateTime @db.Date
+  gambar1_struktural    String   @db.VarChar(100)
+  gambar2_struktural    String   @db.VarChar(100)
+  status_struktural     String   @default("0") @db.VarChar(2)
+}
+
+model simpeg_riwayat_dp3 {
+  id_riwayat_dp3    Int      @id @default(autoincrement())
+  id_pegawai        String   @db.VarChar(12)
+  tahun             Int      @db.Year
+  nama_pp           String   @db.VarChar(30)
+  nama_app          String   @db.VarChar(100)
+  kesetiaan         String   @db.VarChar(10)
+  prestasi_kerja    String   @db.VarChar(10)
+  tanggung_jawab    String   @db.VarChar(10)
+  ketaatan          String   @db.VarChar(10)
+  kejujuran         String   @db.VarChar(10)
+  kerjasama         String   @db.VarChar(10)
+  prakarsa          String   @db.VarChar(10)
+  kepemimpinan      String   @db.VarChar(10)
+  jumlah_penilaian  String   @db.VarChar(10)
+  nilai_rata_rata_p String   @db.VarChar(10)
+  tgl_dibuat        DateTime @db.Date
+  tgl_dinilai       DateTime @db.Date
+  tgl_penilai       DateTime @db.Date
+  gambar1_dp3       String   @db.VarChar(100)
+  gambar2_dp3       String   @db.VarChar(100)
+}
+
+model simpeg_riwayat_pangkat {
+  id_riwayat_pangkat    Int      @id @default(autoincrement())
+  id_pegawai            Int      @db.SmallInt
+  id_pangkat_gol_ruang  Int
+  tmt_pangkat_gol_ruang DateTime @db.Date
+  no_sk                 String   @db.VarChar(30)
+  tgl_sk                DateTime @db.Date
+  pejabat_penetap       String   @db.VarChar(50)
+  gambar1_pangkat       String   @db.VarChar(100)
+  gambar2_pangkat       String   @db.VarChar(100)
+}
+
+model simpeg_riwayat_pendidikan {
+  id_riwayat_pendidikan  Int     @id @default(autoincrement())
+  id_pegawai             Int     @db.SmallInt
+  id_level_pendidikan    Int     @db.SmallInt
+  nama_pendidikan        String  @db.VarChar(100)
+  total_sks              Int
+  ipk                    Decimal @db.Decimal(4, 2)
+  fakultas_jurusan_prodi String  @db.VarChar(100)
+  tempat                 String  @db.VarChar(100)
+  nama_pimpinan          String  @db.VarChar(100)
+  id_pendanaan           Int     @db.SmallInt
+  id_status              Int     @db.SmallInt
+  thn_masuk              Int     @db.Year
+  thn_lulus              Int     @db.Year
+  gambar1_pendidikan     String  @db.VarChar(100)
+  gambar2_pendidikan     String  @db.VarChar(100)
+}
+
+model simpeg_sertifikat {
+  id_sertifikat     Int      @id @default(autoincrement())
+  id_pegawai        Int      @db.SmallInt
+  nama_sertifikat   String   @db.VarChar(100)
+  tgl_sertifikat    DateTime @db.Date
+  pejabat_penetap   String   @db.VarChar(100)
+  gambar_sertifikat String   @db.VarChar(100)
+}
+
+model simpeg_status_pegawai {
+  id_status_pegawai   Int    @id @default(autoincrement()) @db.TinyInt
+  nama_status_pegawai String @default("") @db.VarChar(50)
+  aktif               String @db.Char(1)
+}
+
+model simpeg_sub_unit {
+  id_sub_unit   Int    @id @default(autoincrement()) @db.TinyInt
+  nama_sub_unit String @db.VarChar(100)
+}
+
+model user_level {
+  id_level   Boolean @id
+  nama_level String  @db.Char(20)
+}
+
+model users {
+  id_user      Int          @id @default(autoincrement())
+  level        Int          @db.SmallInt
+  username     String       @unique(map: "username") @db.Char(35)
+  ref_user     String?      @db.VarChar(100)
+  password     String?      @db.VarChar(100)
+  nama_lengkap String?      @db.VarChar(100)
+  email        String?      @db.VarChar(100)
+  no_telp      String?      @db.VarChar(100)
+  aktif        users_aktif
+  blokir       users_blokir @default(N)
+  ket          String?      @db.VarChar(255)
+  id_session   String?      @db.VarChar(255)
+}
+
+enum siap_mk_kelompok_aktif {
+  Y
+  N
+}
+
+enum siap_program_kelas_aktif {
+  Y
+  N
+}
+
+enum siap_kategori_spp_aktif {
+  Y
+  T
+}
+
+enum siap_thn_ak_aktif {
+  Y
+  T
+}
+
+enum users_aktif {
+  Y
+  N
+}
+
+enum users_blokir {
+  Y
+  N
+}
+
+enum siap_mk_ket_rps {
+  Y
+  T
+}
