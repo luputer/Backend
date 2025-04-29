@@ -67,7 +67,7 @@ const login = async (req, res) => {
             });
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = bcrypt.compare(password, user.password);
         console.log('Password Valid:', isPasswordValid); // Log hasil validasi password
 
         if (!isPasswordValid) {
@@ -97,7 +97,7 @@ const login = async (req, res) => {
         });
     }
 };
-
+    
 
 const getById = async (req, res) => {
     const {
